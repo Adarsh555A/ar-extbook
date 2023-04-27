@@ -40,7 +40,7 @@ const senndVerifymail = async (name, email, user_id) => {
       from: config.emailUser,
       to: email,
       subject: 'for verification mail',
-      html: `<p> Hii ${name} please click on this link for verify your mail <a href="http://127.0.0.1:3000/checkmail/${user_id}">Verify</a> now.</p>`
+      html: `<p> Hii ${name} please click on this link for verify your mail <a href="https://x6v4mq-5500.csb.app/checkmail/${user_id}">Verify</a> now.</p>`
     }
     transporter.sendMail(mailoption, function (error, info) {
       if (error) {
@@ -72,7 +72,7 @@ const senndResetPasswordMail = async (name, email, token) => {
       from: config.emailUser,
       to: email,
       subject: 'for reset password mail',
-      html: `<p> Hii ${name} Ar is send mail to reset password <a href="http://127.0.0.1:3000/forget-password/${token}">Reset </a> your password.</p>`
+      html: `<p> Hii ${name} Ar is send mail to reset password <a href="https://x6v4mq-5500.csb.app/forget-password/${token}">Reset </a> your password.</p>`
     }
     transporter.sendMail(mailoption, function (error, info) {
       if (error) {
