@@ -36,8 +36,8 @@ const comment = require('../controllers/comment')
 const auth = require('../middleware/auth');
 
 // agar koi resgister url par hit kata hai toh page pe jane se pehle humara middleware yaani auth check karega ki user koi login logout kiya hai ki nahi 
-user_route.get('/resgister', userControl.registerload)
-user_route.post('/resgister', userControl.register)
+user_route.get('/signup', userControl.registerload)
+user_route.post('/signup', userControl.register)
 // agar koi / url par hit kata hai toh page pe jane se pehle humara middleware yaani auth check karega ki user koi login logout kiya hai ki nahi 
 user_route.get('/login', userControl.loadLogin);
 user_route.post('/login', userControl.login);
