@@ -60,7 +60,7 @@ user_route.post('/verification', userControl.verification)
 //blog
 user_route.get('/uploadblog', blogpost.uploadblogload)
 user_route.post('/uploadblog',  blogpost.uploadblog)
-user_route.get('/blogs', blogpost.blogsload)
+user_route.get('/blogusers', blogpost.blogsload)
 user_route.get('/myblogs',  blogpost.myblogsload)
 user_route.get('/editblog/:id',  blogpost.editblogload)
 user_route.post('/editblog/:id', blogpost.editblog)
@@ -68,23 +68,23 @@ user_route.get('/mydeleteblogs/:id', blogpost.mydeleteblogs)
 user_route.get('/like/:id', blogpost.likeblog)
 user_route.get('/unlike/:id', blogpost.unlikeblog)
 user_route.get('/reward', blogpost.rewardload)
-user_route.get('/blogview/:id', blogpost.blogview)
+user_route.get('/blogsview/:id', blogpost.blogview)
 user_route.get('/searchblogs', blogpost.searchblogs)
 user_route.get('/searchusers', userControl.searchusers)
 
 
 user_route.get('/usersviews', userControl.userviewsload)
-user_route.get('/profile/:id', userControl.profileload)
+user_route.get('/usersprofile/:id', userControl.profileload)
 
 //Text post
-user_route.get('/textposts', blogpost.textpostload)
+user_route.get('/textsposts', blogpost.textpostload)
 user_route.get('/uploadtpost',  blogpost.uploadtextpostload)
 user_route.post('/uploadtpost',  blogpost.uploadtpost)
 user_route.get('/mytextpost',  blogpost.mytextpostload)
 user_route.get('/mytextpostdelete/:id',  blogpost.mydeletetextpost)
 user_route.get('/likeTpost/:id', blogpost.liketextpost)
 user_route.get('/unlikeTpost/:id', blogpost.unliketextpost)
-user_route.get('/textpostview/:id', blogpost.textpostview)
+user_route.get('/textspostview/:id', blogpost.textpostview)
 
 
 //comment
@@ -95,12 +95,12 @@ user_route.post('/commenttext/:id', comment.commenttextpost)
 //follow
 user_route.post('/follow', userControl.followpush)
 user_route.post('/unfollow', userControl.followpull)
-user_route.get('/followingposts', userControl.followingposts)
+user_route.get('/userfollowingposts', userControl.followingposts)
 
 // user_route.post('/searchuser', userControl.followpush)
 
-user_route.get('/following/:id',userControl.following)
-user_route.get('/followers/:id',userControl.follower)
+user_route.get('/userfollowing/:id',userControl.following)
+user_route.get('/userfollowers/:id',userControl.follower)
 // chat
 user_route.get('/savechat/:id', userControl.Savechatload)
 user_route.get('/deletechat/:id', userControl.deletechatload)
