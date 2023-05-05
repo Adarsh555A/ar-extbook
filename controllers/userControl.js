@@ -91,10 +91,16 @@ const senndResetPasswordMail = async (name, email, token) => {
 
 const register = async (req, res) => {
   try {
-    console.log("first")
+    if (!req.body.name || !req.body.email || !req.body.image || !req.body.password) {
+      return res.status(200).send({message: 'unfilled'})
+  }
+      const passwordhash = await bcrypt.hash(req.body.password, 10);
 
-    const passwordhash = await bcrypt.hash(req.body.password, 10);
-    console.log("second")
+   await User.findOne({ email: req.body.email }).then((savedUser) => {
+    if (savedUser) {
+        return res.status(200).send({ message: "Already" })
+
+    }
     const user = new User({
       name: req.body.name,
       email: req.body.email,
@@ -102,11 +108,13 @@ const register = async (req, res) => {
       password: passwordhash
 
     })
-    const userdatas = await user.save();
+    const userdatas = user.save();
     // hume humesa position yaad rakhna hoga taki data's ulta pulta na jaye
     senndVerifymail(req.body.name, req.body.email, userdatas._id);
     res.status(200).send({ message: 'Resgistration' })
-  }
+    
+  })
+}
   catch (err) {
     console.log(err.message + "ggg")
   }
