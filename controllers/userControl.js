@@ -92,29 +92,29 @@ const senndResetPasswordMail = async (name, email, token) => {
 const register = async (req, res) => {
   try {
     if (!req.body.name || !req.body.email || !req.body.image || !req.body.password) {
-      return res.status(200).send({message: 'unfilled'})
-  }
-      const passwordhash = await bcrypt.hash(req.body.password, 10);
+      return res.status(200).send({ message: 'unfilled' })
+    }
+    const passwordhash = await bcrypt.hash(req.body.password, 10);
 
-   await User.findOne({ email: req.body.email }).then((savedUser) => {
-    if (savedUser) {
+    await User.findOne({ $or: [{ email: req.body.email }, { name: req.body.name }] }).then((savedUser) => {
+      if (savedUser) {
         return res.status(200).send({ message: "Already" })
 
-    }
-    const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      image: req.body.image,
-      password: passwordhash
+      }
+      const user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        image: req.body.image,
+        password: passwordhash
+
+      })
+      const userdatas = user.save();
+      // hume humesa position yaad rakhna hoga taki data's ulta pulta na jaye
+      senndVerifymail(req.body.name, req.body.email, userdatas._id);
+      res.status(200).send({ message: 'Resgistration' })
 
     })
-    const userdatas = user.save();
-    // hume humesa position yaad rakhna hoga taki data's ulta pulta na jaye
-    senndVerifymail(req.body.name, req.body.email, userdatas._id);
-    res.status(200).send({ message: 'Resgistration' })
-    
-  })
-}
+  }
   catch (err) {
     console.log(err.message + "ggg")
   }
@@ -165,7 +165,7 @@ const loaddashboard = async (req, res) => {
   try {
     // const userdata = await User.findById({_id: req.session.user._id})
     const post = await blog.find({ userid: req.session.user._id })
-    const text  = await Tpost.find({userid: req.session.user._id})
+    const text = await Tpost.find({ userid: req.session.user._id })
     if (post) {
       var totalviewscount = 0;
 
@@ -183,7 +183,7 @@ const loaddashboard = async (req, res) => {
     const allfollowingconut = await User.findById({ _id: req.session.user._id })
     // console.log(allfollowingconut.following.length)
 
-    res.status(200).send({ user: allfollowingconut,totalposts: posts})
+    res.status(200).send({ user: allfollowingconut, totalposts: posts })
   } catch (error) {
     res.status(200).send({ user: "error" })
     console.log(error.message)
@@ -200,20 +200,39 @@ const loadedit = async (req, res) => {
 }
 const editprofile = async (req, res) => {
   try {
-    if(req.body.name && req.body.user_id){
-    const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { name: req.body.name} })
-    }
-    else if(req.body.email){
-      const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { email: req.body.email} })
+    console.log("first")
+     if (req.body.name && req.body.user_id) {  
+      const savedUser = await User.findOne({ name: req.body.name })
+  
+  if (!savedUser) {
+    
+  
+    const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { name: req.body.name } })
+  }else{
+    res.status(200).send({ message: "Already" })
 
-    }else if(req.body.image){
-      const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { image: req.body.image } })
+  }
+  }
+    else if (req.body.email) {
+      const EsavedUser = await User.findOne({ email: req.body.email })
+  
+      if (!EsavedUser) {
+        
+    
+  const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { email: req.body.email } })}
+  else{
+    res.status(200).send({ message: "Already" })
 
-    }
+  }
+
+} else if (req.body.image) {
+  const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { image: req.body.image } })
+
+}
     // res.redirect('/')
   } catch (error) {
-    console.log(error.message + "yt7rrgggggggggggggggggggggggggggggggggggggg")
-  }
+  console.log(error.message + "yt7rrgggggggggggggggggggggggggggggggggggggg")
+}
 }
 // jaise hi url[http://127.0.0.1:5500/verify?id=${user_id}] par id aye verify hone ke liye tab uski id lekar check karke is_verifed par 0 ko hata kar 1 dal do
 const verifymail = async (req, res) => {
@@ -222,7 +241,7 @@ const verifymail = async (req, res) => {
     const checkid = await User.findById({ _id: req.params.id })
     console.log(req.params.id)
     console.log(checkid.name)
-    res.status(200).send({message:"email-verified"})
+    res.status(200).send({ message: "email-verified" })
   } catch (error) {
     console.log(error.message)
   }
@@ -323,7 +342,7 @@ const profileload = async (req, res) => {
     const userDatas = await User.findById({ _id: id })
     if (userDatas) {
       const post = await blog.find({ userid: userDatas._id })
-      const text = await Tpost.find({userid: userDatas._id})
+      const text = await Tpost.find({ userid: userDatas._id })
       var postcount = post.length;
       var textcount = text.length;
       var posts = postcount + textcount;
@@ -488,71 +507,72 @@ const Savechatload = async (req, res) => {
     const id = req.params.id;
     var chats = await Chat.find({
       $or: [{ sender_id: req.session.user._id, receiver_id: id },
-      { sender_id: id, receiver_id: req.session.user._id }]  })  // console.log(userchat)
+      { sender_id: id, receiver_id: req.session.user._id }]
+    })  // console.log(userchat)
     res.status(200).send({ success: true, chat: chats, sender_id: req.session.user._id })
 
-    } catch (error) {
-      res.status(200).send({ success: false, msg: error.message })
-      console.log(error.message)
+  } catch (error) {
+    res.status(200).send({ success: false, msg: error.message })
+    console.log(error.message)
 
-    }
   }
-  const deletechatload = async (req, res) => {
-    try {
-      const id = req.params.id;
-      var detelechats = await Chat.findByIdAndDelete({_id: id})
-      if (detelechats) {
-        res.status(200).send({ success: true, message: "deleted successfuly" })
+}
+const deletechatload = async (req, res) => {
+  try {
+    const id = req.params.id;
+    var detelechats = await Chat.findByIdAndDelete({ _id: id })
+    if (detelechats) {
+      res.status(200).send({ success: true, message: "deleted successfuly" })
 
-      } else {
-        res.status(200).send({ success: true, message: "deleted unsuccessfuly" })
+    } else {
+      res.status(200).send({ success: true, message: "deleted unsuccessfuly" })
 
-      }  
-  
-      } catch (error) {
-        res.status(200).send({ success: false, msg: error.message })
-        console.log(error.message)
-  
-      }
     }
-    const searchusers = async(req, res) => {
-      try {
-        const allusers = await User.find({})
-        res.status(200).send({ user: allusers })
 
-      } catch (error) {
-        console.error(error);
-        res.status(200).send({ user: "error" })
+  } catch (error) {
+    res.status(200).send({ success: false, msg: error.message })
+    console.log(error.message)
 
-      }
-    }
+  }
+}
+const searchusers = async (req, res) => {
+  try {
+    const allusers = await User.find({})
+    res.status(200).send({ user: allusers })
+
+  } catch (error) {
+    console.error(error);
+    res.status(200).send({ user: "error" })
+
+  }
+}
 
 module.exports = {
-    registerload,
-    register,
-    loadLogin,
-    login,
-    logout,
-    loaddashboard,
-    loadedit,
-    editprofile,
-    verifymail,
-    forgetload,
-    forgetVerify,
-    forgetPasswordload,
-    forgetPassword,
-    verificationload,
-    verification,
-    userviewsload,
-    profileload,
-    followpush,
-    following,
-    follower,
-    followpull,
-    followingposts,
-    Savechat,
-    Savechatload,
-    deletechatload,
-    searchusers,
-    
-  }
+  registerload,
+  register,
+  loadLogin,
+  login,
+  logout,
+  loaddashboard,
+  loadedit,
+  editprofile,
+  verifymail,
+  forgetload,
+  forgetVerify,
+  forgetPasswordload,
+  forgetPassword,
+  verificationload,
+  verification,
+  userviewsload,
+  profileload,
+  followpush,
+  following,
+  follower,
+  followpull,
+  followingposts,
+  Savechat,
+  Savechatload,
+  deletechatload,
+  searchusers,
+
+}

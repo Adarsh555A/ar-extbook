@@ -48,8 +48,8 @@ user_route.get('/dashboard', userControl.loaddashboard);
 // user_route.get('*', function (req, res) {
 //     res.redirect('/')
 // });
-user_route.get('/edit', userControl.loadedit)
-user_route.post('/edit', userControl.editprofile)
+user_route.get('/profileedit', userControl.loadedit)
+user_route.post('/profileedit', userControl.editprofile)
 user_route.get('/verify/:id', userControl.verifymail)
 user_route.get('/reset-password', userControl.forgetload)
 user_route.post('/reset-password', userControl.forgetVerify)
