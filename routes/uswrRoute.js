@@ -45,6 +45,8 @@ user_route.post('/login', userControl.login);
 user_route.get('/logout', userControl.logout);
 // agar koi dashboard url par hit kata hai toh page pe jane se pehle humara middleware yaani auth check karega ki user koi login kiya hai ki nahi 
 user_route.get('/dashboard', userControl.loaddashboard);
+user_route.post('/location', userControl.location);
+
 // user_route.get('*', function (req, res) {
 //     res.redirect('/')
 // });

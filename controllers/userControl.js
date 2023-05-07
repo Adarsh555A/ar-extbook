@@ -201,38 +201,39 @@ const loadedit = async (req, res) => {
 const editprofile = async (req, res) => {
   try {
     console.log("first")
-     if (req.body.name && req.body.user_id) {  
+    if (req.body.name && req.body.user_id) {
       const savedUser = await User.findOne({ name: req.body.name })
-  
-  if (!savedUser) {
-    
-  
-    const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { name: req.body.name } })
-  }else{
-    res.status(200).send({ message: "Already" })
 
-  }
-  }
+      if (!savedUser) {
+
+
+        const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { name: req.body.name } })
+      } else {
+        res.status(200).send({ message: "Already" })
+
+      }
+    }
     else if (req.body.email) {
       const EsavedUser = await User.findOne({ email: req.body.email })
-  
+
       if (!EsavedUser) {
-        
-    
-  const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { email: req.body.email } })}
-  else{
-    res.status(200).send({ message: "Already" })
 
-  }
 
-} else if (req.body.image) {
-  const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { image: req.body.image } })
+        const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { email: req.body.email } })
+      }
+      else {
+        res.status(200).send({ message: "Already" })
 
-}
+      }
+
+    } else if (req.body.image) {
+      const filetext = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { image: req.body.image } })
+
+    }
     // res.redirect('/')
   } catch (error) {
-  console.log(error.message + "yt7rrgggggggggggggggggggggggggggggggggggggg")
-}
+    console.log(error.message + "yt7rrgggggggggggggggggggggggggggggggggggggg")
+  }
 }
 // jaise hi url[http://127.0.0.1:5500/verify?id=${user_id}] par id aye verify hone ke liye tab uski id lekar check karke is_verifed par 0 ko hata kar 1 dal do
 const verifymail = async (req, res) => {
@@ -476,7 +477,13 @@ const followingposts = async (req, res) => {
     const id = req.session.user._id;
     const userDatas = await User.findById({ _id: id })
     const post = await blog.find({ userid: { $in: userDatas.following } })
+    // var post1 = []
+    // post1 = post
+    //     var tpost = await Tpost.find({ userid: { $in: userDatas.following } })
+    //     post1 = post1.concat(tpost);
 
+    // // console.log(post1.sort())
+    //      let followingposts = post1.sort();
     const allusersdata = await User.find({ _id: { $in: userDatas.following } });
     let followingpo = 1;
     res.status(200).send({ users: allusersdata, userc: req.session.user._id, post: post })
@@ -546,6 +553,19 @@ const searchusers = async (req, res) => {
 
   }
 }
+const location = async (req, res) => {
+  try {
+    if (req.body.location && req.body.user_id) {
+      const location = await User.findByIdAndUpdate({ _id: req.body.user_id }, { $set: { location: req.body.location } })
+      res.status(200).send({ message: "success" })
+
+    }
+
+    // res.redirect('/')
+  } catch (error) {
+    console.log(error.message + "error")
+  }
+}
 
 module.exports = {
   registerload,
@@ -574,5 +594,5 @@ module.exports = {
   Savechatload,
   deletechatload,
   searchusers,
-
+  location
 }
