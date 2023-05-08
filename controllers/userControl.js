@@ -183,13 +183,9 @@ const loaddashboard = async (req, res) => {
     const allfollowingconut = await User.findById({ _id: req.session.user._id })
     // console.log(allfollowingconut.following.length)
 
-    if (allfollowingconut) {
-      res.status(200).send({ user: allfollowingconut, totalposts: posts })
-    }
-    else {
-      res.status(200).send({ user: "error" })
-
-    }  } catch (error) {
+    res.status(200).send({ user: allfollowingconut, totalposts: posts })
+  } catch (error) {
+    res.status(200).send({ user: "error" })
     console.log(error.message)
   }
 }
