@@ -6,6 +6,9 @@ const comment = require('../models/commentModel');
 const Tpost = require('../models/textpost')
 const { post, all } = require('../routes/uswrRoute');
 const { Cookie } = require('express-session');
+var FCM = require('fcm-node');
+const config = require('../config');
+
 // const cloudinary = require('./cloudinary')
 const uploadblogload = async (req, res) => {
     try {
@@ -23,6 +26,67 @@ const uploadblogload = async (req, res) => {
   
     }
   }
+  const singlesendnotification = (registrationToken) => {
+    var serverKey = config.serverkey;
+      // console.log(serverKey)
+      var fcm = new FCM(serverKey);
+    var message = {
+      to: registrationToken,
+      notification: {
+        title: 'NotifcatioTestAPP',
+        body: 'this is test notificartion',
+      },
+  
+      data: { //you can send only notification or only data(or include both)
+        title: 'ok cdfsdsdfsd',
+        body: '{"name" : "okg ooggle ogrlrl","product_id" : "123","final_price" : "0.00035"}'
+      }
+  
+    };
+  
+    fcm.send(message, function (err, response) {
+      if (err) {
+        console.log("Something has gone wrong!" + err);
+        console.log("Respponse:! " + response);
+      } else {
+        // showToast("Successfully sent with response");
+        console.log("Successfully sent with response: ", response);
+      }
+  
+    });
+  
+  }
+  const mutiplesendnotification = (registrationmulToken) => {
+    var serverKey = config.serverkey;
+    // console.log(serverKey)
+    var fcm = new FCM(serverKey);
+    var pushMessage = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+      registration_ids:registrationmulToken,
+      content_available: true,
+      mutable_content: true,
+      notification: {
+          body: "This is test.",
+          icon : 'myicon',//Default Icon
+          sound : 'mySound',//Default sound
+          // badge: badgeCount, example:1 or 2 or 3 or etc....
+      },
+      // data: {
+      //   notification_type: 5,
+      //   conversation_id:inputs.user_id,
+      // }
+    };
+  
+    fcm.send(pushMessage, function(err, response){
+        if (err) {
+            console.log("Something has gone wrong!",err);
+        } else {
+            console.log("Push notification sent.", response);
+        }
+    });
+  
+     
+  }
+  
   const uploadblog = async (req, res) => {
     try {
         const id = req.session.user._id;
@@ -38,9 +102,38 @@ const uploadblogload = async (req, res) => {
 
           })
           const userdatas = await Blog.save();
-          console.log("second")
           res.status(200).send({ message: 'Post Successfully!' })
-
+          const creatoridpost = userdatas.userid;
+          const creatorfollowers = await User.findById({ _id: creatoridpost })
+          if (creatorfollowers) {
+            const allusersdata = await User.find({ _id: { $in: creatorfollowers.followers } });
+            // const allusersdata = await User.find({ _id: { $in: creatorfollowers.followers } });
+            var reg_ids = [];
+            allusersdata.forEach(token => {
+              if (token.fcm_token === '') { }
+              else {
+                reg_ids.push(token.fcm_token)
+              }
+            })
+            const userfollowfcm = reg_ids;
+    
+            if (userfollowfcm.length === 1) {
+              console.log(userfollowfcm)
+              const fcm_token_user = userfollowfcm[0];
+    
+              singlesendnotification(fcm_token_user)
+             
+    
+            } else {
+                 mutiplesendnotification(userfollowfcm)
+    
+            }
+    
+          } else {
+            console.log("first")
+          }
+    
+    
 
         } else {
           res.status(200).send({ message: 'Post unSuccessfully!' })
@@ -307,7 +400,37 @@ const uploadtpost = async (req, res) => {
         const userdatas = await TPost.save();
         console.log("second")
         res.status(200).send({ message: 'Post Successfully!' })
-
+        const creatoridpost = userdatas.userid;
+        const creatorfollowers = await User.findById({ _id: creatoridpost })
+        if (creatorfollowers) {
+          const allusersdata = await User.find({ _id: { $in: creatorfollowers.followers } });
+          // const allusersdata = await User.find({ _id: { $in: creatorfollowers.followers } });
+          var reg_ids = [];
+          allusersdata.forEach(token => {
+            if (token.fcm_token === '') { }
+            else {
+              reg_ids.push(token.fcm_token)
+            }
+          })
+          const userfollowfcm = reg_ids;
+  
+          if (userfollowfcm.length === 1) {
+            console.log(userfollowfcm)
+            const fcm_token_user = userfollowfcm[0];
+  
+            singlesendnotification(fcm_token_user)
+           
+  
+          } else {
+               mutiplesendnotification(userfollowfcm)
+  
+          }
+  
+        } else {
+          console.log("name not exist")
+        }
+  
+  
 
       } else {
         res.status(200).send({ message: 'Post unSuccessfully!' })

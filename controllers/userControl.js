@@ -10,6 +10,8 @@ const Chat = require('../models/chatModel')
 const { emailUser, pass, passuserd } = require('../config');
 const { all } = require('../routes/uswrRoute');
 const Tpost = require('../models/textpost')
+var FCM = require('fcm-node');
+
 // joh bhi user [http://127.0.0.1:5500/register] pe jayega usse register.ejs par le jayega
 const registerload = async (req, res) => {
   try {
@@ -87,6 +89,38 @@ const senndResetPasswordMail = async (name, email, token) => {
 
 }
 
+const singlesendnotification = (registrationToken, senderdata) => {
+  var serverKey = config.serverkey;
+    // console.log(serverKey)
+    var fcm = new FCM(serverKey);
+  var message = {
+    to: registrationToken,
+    notification: {
+      title: `${senderdata.username} starting follow you`,
+      body: senderdata.content,
+      icon: 'https://res.cloudinary.com/arcloud555/image/upload/v1683465039/AR_Extrabook_1_mgtmty.png',
+      image: senderdata.userimage,
+    },
+
+    data: { //you can send only notification or only data(or include both)
+      title: 'ok cdfsdsdfsd',
+      body: '{"name" : "okg ooggle ogrlrl","product_id" : "123","final_price" : "0.00035"}'
+    }
+
+  };
+
+  fcm.send(message, function (err, response) {
+    if (err) {
+      console.log("Something has gone wrong!" + err);
+      console.log("Respponse:! " + response);
+    } else {
+      // showToast("Successfully sent with response");
+      console.log("Successfully sent with response: ", response);
+    }
+
+  });
+
+}
 
 
 const register = async (req, res) => {
@@ -383,6 +417,12 @@ const followpush = async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.body.followId, { $push: { followers: req.session.user._id } })
     await User.findByIdAndUpdate(req.session.user._id, { $push: { following: req.body.followId } })
+    const userDatas = await User.findById({ _id: req.body.followId })
+    if (userDatas) {
+      const followeduser = req.session.user;
+      singlesendnotification(userDatas.fcm_token, followeduser)
+    }
+
     // const id = req.query.id;
     // const userDatas = await User.findById({ _id: id })
 
