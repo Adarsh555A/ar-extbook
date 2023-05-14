@@ -10,9 +10,9 @@ const config = require('../config');
 
 const singlesendnotification = (registrationToken, senderdata) => {
   var serverKey = config.serverkey;
-  // console.log(serverKey)
-  var fcm = new FCM(serverKey);
-  console.log(senderdata)
+    // console.log(serverKey)
+    var fcm = new FCM(serverKey);
+    console.log(senderdata)
   var message = {
     to: registrationToken,
     notification: {
@@ -60,27 +60,28 @@ const commentblog = async (req, res) => {
 
       const userdatas = await commentdata.save();
       // const commented = await comment.find({})
-      console.log("ok")
-      const commented = await comment.find({})
-      const usersiddata = await User.findById({ _id: userDatas.userid })
-      const findblogcreator = await blog.findById({ _id: userdatas.blogid })
-      const usernamesend = await User.findById({ _id: findblogcreator.userid })
-      if (usernamesend) {
-        let senderdata = userdatas;
+console.log("ok")
+        const commented = await comment.find({})
+         const usersiddata = await User.findById({_id: userDatas.userid})
+         const findblogcreator = await blog.findById({_id: userdatas.blogid})
+         const usernamesend = await User.findById({_id: findblogcreator.userid})
+         if(usernamesend){
+          let senderdata = userdatas;
+          
+          singlesendnotification(usernamesend.fcm_token, senderdata)
+         }
+         
+        // if(post.length > 0){
+        //   for(let i = 0; i < post.length; i++){
+             
+        //   }
+        // }
 
-        singlesendnotification(usernamesend.fcm_token, senderdata)
-      }
-      // if(post.length > 0){
-      //   for(let i = 0; i < post.length; i++){
 
-      //   }
-      // }
-
-
-      res.status(200).send({ user: userDatas, admin: usersiddata, userco: commented, post: userDatas, usercu: req.session.user._id })
+        res.status(200).send({ user: userDatas, admin: usersiddata, userco: commented,post: userDatas,usercu: req.session.user._id })
       //  res.render('blogviews', {user: userDatas,userco: commented,post: userDatas})
     } else {
-      res.status(200).send({ user: "not done" })
+      res.status(200).send({ user: "not done"})
 
     }
 
@@ -110,28 +111,28 @@ const commenttextpost = async (req, res) => {
 
       const userdatas = await commentdata.save();
       // const commented = await comment.find({})
-      console.log("ok")
-      const commented = await comment.find({})
-      const usersiddata = await User.findById({_id: userDatas.userid})
-      const findblogcreator = await blog.findById({_id: userdatas.blogid})
-      const usernamesend = await User.findById({_id: findblogcreator.userid})
-      if(usernamesend){
-       let senderdata = userdatas;
-       
-       singlesendnotification(usernamesend.fcm_token, senderdata)
-      }
+console.log("ok")
+        const commented = await comment.find({})
+         const usersiddata = await User.findById({_id: userDatas.userid})
+         const findblogcreator = await blog.findById({_id: userdatas.blogid})
+         const usernamesend = await User.findById({_id: findblogcreator.userid})
+         if(usernamesend){
+          let senderdata = userdatas;
+          
+          singlesendnotification(usernamesend.fcm_token, senderdata)
+         }
 
-      // if(post.length > 0){
-      //   for(let i = 0; i < post.length; i++){
+        // if(post.length > 0){
+        //   for(let i = 0; i < post.length; i++){
+             
+        //   }
+        // }
 
-      //   }
-      // }
 
-
-      res.status(200).send({ user: userDatas, admin: usersiddata, userco: commented, post: userDatas, usercu: req.session.user._id })
+        res.status(200).send({ user: userDatas, admin: usersiddata, userco: commented,post: userDatas,usercu: req.session.user._id })
       //  res.render('blogviews', {user: userDatas,userco: commented,post: userDatas})
     } else {
-      res.status(200).send({ user: "not done" })
+      res.status(200).send({ user: "not done"})
 
     }
 
@@ -149,10 +150,10 @@ const commentblogload = async (req, res) => {
     const id = req.params.id;
     const userDatas = await comment.find({ blogid: id })
     if (userDatas) {
-      res.status(200).send({ usercomment: userDatas })
+        res.status(200).send({ usercomment: userDatas})
       //  res.render('blogviews', {user: userDatas,userco: commented,post: userDatas})
     } else {
-      res.status(200).send({ usercomment: "not work" })
+      res.status(200).send({ usercomment: "not work"})
 
     }
 
