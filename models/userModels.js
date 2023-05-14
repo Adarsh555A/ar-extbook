@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
     }, token: {
         type: String,
         default: ''
+    }, fcm_token: {
+        type: String,
+        default: ''
     },location: {
         type: String,
         default: 'undefined'

@@ -96,10 +96,12 @@ const singlesendnotification = (registrationToken, senderdata) => {
   var message = {
     to: registrationToken,
     notification: {
-      title: `${senderdata.username} starting follow you`,
-      body: senderdata.content,
+      title: `${senderdata.name} starting follow you`,
+      body: `${senderdata.location}`,
       icon: 'https://res.cloudinary.com/arcloud555/image/upload/v1683465039/AR_Extrabook_1_mgtmty.png',
-      image: senderdata.userimage,
+      image: senderdata.image,
+      click_action: `https://x6v4mq-5500.csb.app/profile/${senderdata.id}`,
+      redirect: `https://x6v4mq-5500.csb.app/profile/${senderdata.id}`
     },
 
     data: { //you can send only notification or only data(or include both)

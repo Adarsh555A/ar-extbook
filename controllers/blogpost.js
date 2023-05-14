@@ -26,15 +26,17 @@ const uploadblogload = async (req, res) => {
   
     }
   }
-  const singlesendnotification = (registrationToken) => {
+  const singlesendnotification = (registrationToken, creator) => {
     var serverKey = config.serverkey;
       // console.log(serverKey)
       var fcm = new FCM(serverKey);
     var message = {
       to: registrationToken,
       notification: {
-        title: 'NotifcatioTestAPP',
-        body: 'this is test notificartion',
+        title: `${creator.name} is upload new post.`,
+        body: `${creator.location}`,
+        icon : creator.image,
+
       },
   
       data: { //you can send only notification or only data(or include both)
@@ -56,7 +58,7 @@ const uploadblogload = async (req, res) => {
     });
   
   }
-  const mutiplesendnotification = (registrationmulToken) => {
+  const mutiplesendnotification = (registrationmulToken, creator) => {
     var serverKey = config.serverkey;
     // console.log(serverKey)
     var fcm = new FCM(serverKey);
@@ -65,9 +67,10 @@ const uploadblogload = async (req, res) => {
       content_available: true,
       mutable_content: true,
       notification: {
-          body: "This is test.",
-          icon : 'myicon',//Default Icon
-          sound : 'mySound',//Default sound
+          body: `${creator.name} is upload new post.`,
+          icon : creator.image,//Default Icon
+          sound : 'mySound',
+          //Default sound
           // badge: badgeCount, example:1 or 2 or 3 or etc....
       },
       // data: {
@@ -121,11 +124,11 @@ const uploadblogload = async (req, res) => {
               console.log(userfollowfcm)
               const fcm_token_user = userfollowfcm[0];
     
-              singlesendnotification(fcm_token_user)
+              singlesendnotification(fcm_token_user, creatorfollowers)
              
     
             } else {
-                 mutiplesendnotification(userfollowfcm)
+                 mutiplesendnotification(userfollowfcm, creatorfollowers)
     
             }
     
@@ -418,11 +421,11 @@ const uploadtpost = async (req, res) => {
             console.log(userfollowfcm)
             const fcm_token_user = userfollowfcm[0];
   
-            singlesendnotification(fcm_token_user)
+            singlesendnotification(fcm_token_user, creatorfollowers)
            
   
           } else {
-               mutiplesendnotification(userfollowfcm)
+               mutiplesendnotification(userfollowfcm, creatorfollowers)
   
           }
   
