@@ -59,6 +59,8 @@ user_route.get('/reset-password/:token', userControl.forgetPasswordload)
 user_route.post('/reset-password/:token', userControl.forgetPassword)
 user_route.get('/verification', userControl.verificationload)
 user_route.post('/verification', userControl.verification)
+user_route.post('/notification', userControl.notification);
+
 //blog
 user_route.get('/uploadblog', blogpost.uploadblogload)
 user_route.post('/uploadblog',  blogpost.uploadblog)

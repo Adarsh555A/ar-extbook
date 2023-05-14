@@ -608,6 +608,18 @@ const location = async (req, res) => {
     console.log(error.message + "error")
   }
 }
+const notification = async (req, res) => {
+  try {
+    if (req.body.userid && req.body.fcm_token) {
+      const notification = await User.findByIdAndUpdate({ _id: req.body.userid }, { $set: { fcm_token: req.body.fcm_token } })
+    }
+
+    // res.redirect('/')
+  } catch (error) {
+    console.log(error.message + "yt7rrgggggggggggggggggggggggggggggggggggggg")
+  }
+}
+
 
 module.exports = {
   registerload,
@@ -636,5 +648,6 @@ module.exports = {
   Savechatload,
   deletechatload,
   searchusers,
-  location
+  location,
+  notification
 }
