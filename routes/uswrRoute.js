@@ -2,11 +2,18 @@ const express = require('express');
 const user_route = express();
 const bodyparser = require('body-parser')
 const session = require('express-session');
+const passport = require('passport');
+
 const {SESSION_SECRET} = require('../key')
 const User = require('../models/userModels')
 user_route.use(bodyparser.json())
 user_route.use(bodyparser.urlencoded({extended: true}))
-user_route.use(session({ secret: SESSION_SECRET}))
+user_route.use(session({ secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+
+}))
+user_route.use(passport.session())
 
 // user_route.set('view engine' , 'ejs')
 // user_route.set('views' , './views')
@@ -58,6 +65,8 @@ user_route.post('/reset-password', userControl.forgetVerify)
 user_route.get('/reset-password/:token', userControl.forgetPasswordload)
 user_route.post('/reset-password/:token', userControl.forgetPassword)
 user_route.get('/verification', userControl.verificationload)
+user_route.get('/testauth', userControl.googleauthi)
+
 user_route.post('/verification', userControl.verification)
 user_route.post('/notification', userControl.notification);
 

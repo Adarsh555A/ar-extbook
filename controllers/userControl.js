@@ -155,6 +155,21 @@ const register = async (req, res) => {
     console.log(err.message + "ggg")
   }
 }
+const googleauthi = async (req, res) => {
+  try {
+    // console.log(req.userData + "ji")
+    // console.log(req.session.userData)
+    let data = req.user;
+    if(data.is_verified === '0'){
+    const updateddata = await User.findByIdAndUpdate({ _id: data._id }, { $set: { is_verified: "1"} })
+    }
+     req.session.user = data;
+     res.redirect('/home');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 const loadLogin = async (req, res) => {
   try {
     res.status(200).send({ message: "login" })
@@ -649,5 +664,6 @@ module.exports = {
   deletechatload,
   searchusers,
   location,
-  notification
+  notification,
+  googleauthi
 }
