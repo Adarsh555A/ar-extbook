@@ -21,19 +21,19 @@ user_route.use(passport.session())
 user_route.use(express.static('public'));
 
 const path = require('path');
-const multer = require('multer');
+// const multer = require('multer');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb){
-        cb(null, path.join(__dirname, '../public/images'))
-    },
-    filename: function(req, file, cb){
-        const name = Date.now() + '-' + file.originalname;
-        cb(null, name)
-    }
-})
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb){
+//         cb(null, path.join(__dirname, '../public/images'))
+//     },
+//     filename: function(req, file, cb){
+//         const name = Date.now() + '-' + file.originalname;
+//         cb(null, name)
+//     }
+// })
 
-const upload  = multer({ storage: storage});
+// const upload  = multer({ storage: storage});
 
 const userControl = require('../controllers/userControl')
 const blogpost = require('../controllers/blogpost')

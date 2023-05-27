@@ -7,7 +7,6 @@ const express = require('express');
 const path = require('path')
 mongoose.connect(Mongo_Url).then( () => console.log("Mongodb is connected!"))
 const app= require('express')();
-const cors = require("cors")
 const http = require('http').Server(app)
 let port = process.env.port || 5500;
 const User = require('./models/userModels')
@@ -19,8 +18,7 @@ const session = require('express-session');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-app.use(cors())
-app.use('/',cors(),userRoute)
+app.use('/',userRoute)
 function randomString(length) {
     const result = Math.random().toString(length).substring(2, 7);
 
@@ -183,14 +181,15 @@ passport.serializeUser((user, done) => {
 
 
 // send file frontend
-app.use(express.static(path.join(__dirname,"./build")))
-app.get('*',(req, res) => {
-    res.sendFile(path.join(__dirname,"./build/index.html"),
-    function(err){
-        res.status(500).send(err)
-    }
-    )
-})
+// app.use(express.static(path.join(__dirname,"./build")))
+// app.get('*',(req, res) => {
+//     res.sendFile(path.join(__dirname,"./build/index.html"),
+//     function(err){
+//         res.status(500).send(err)
+//     }
+//     )
+// })
+
 // app.get("/login", (req, res) => {
 //     res.json({status: "sucess"})
 // })

@@ -1,6 +1,5 @@
 const User = require('../models/userModels');
 const { findById } = require('../models/userModels');
-const { name } = require('ejs');
 const blog = require('../models/blogmodel');
 const TPost = require('../models/textpost')
 const comment = require('../models/commentModel');

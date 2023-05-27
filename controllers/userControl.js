@@ -2,7 +2,6 @@ const User = require('../models/userModels');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer')
 const { findById } = require('../models/userModels');
-const { name } = require('ejs');
 const randomstring = require('randomstring')
 const config = require('../config');
 const blog = require('../models/blogmodel');
