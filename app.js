@@ -181,15 +181,14 @@ passport.serializeUser((user, done) => {
 
 
 // send file frontend
-// app.use(express.static(path.join(__dirname,"./build")))
-// app.get('*',(req, res) => {
-//     res.sendFile(path.join(__dirname,"./build/index.html"),
-//     function(err){
-//         res.status(500).send(err)
-//     }
-//     )
-// })
-
+app.use(express.static(path.join(__dirname,"./build")))
+app.get('*',(req, res) => {
+    res.sendFile(path.join(__dirname,"./build/index.html"),
+    function(err){
+        res.status(500).send(err)
+    }
+    )
+})
 // app.get("/login", (req, res) => {
 //     res.json({status: "sucess"})
 // })
