@@ -324,7 +324,7 @@ const blogview = async (req, res) => {
   try {
       const id = req.params.id;
       const post = await blog.findById(id)
-      const userdata = await User.findById(post.userid)
+      const userdata = await User.findById(post.userid).select(['-password','-fcm_token','-email','-token'])
       // const userDatas = await User.findById({ _id: id })
       // if (userDatas) {
         res.status(200).send({post: post, userli: req.session.user._id,creator:userdata})
@@ -513,7 +513,7 @@ const textpostview = async (req, res) => {
   try {
       const id = req.params.id;
       const post = await Tpost.findById(id)
-      const userdata = await User.findById(post.userid)
+      const userdata = await User.findById(post.userid).select(['-password','-fcm_token','-email','-token'])
     
       // const userDatas = await User.findById({ _id: id })
       // if (userDatas) {

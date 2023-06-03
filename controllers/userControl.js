@@ -378,8 +378,8 @@ const verification = async (req, res) => {
 }
 const userviewsload = async (req, res) => {
   try {
-    var users = await User.find({ _id: { $nin: [req.session.user._id] } });
-    const allusersdata = await User.find({ _id: { $in: req.session.user.following } });
+    var users = await User.find({ _id: { $nin: [req.session.user._id] } }).select(['-password','-fcm_token','-email','-token']);
+    const allusersdata = await User.find({ _id: { $in: req.session.user.following } }).select(['-password','-fcm_token','-email','-token']);
 
     res.status(200).send({ user: req.session.user, users: users, userf: allusersdata })
   } catch (error) {
@@ -390,7 +390,7 @@ const userviewsload = async (req, res) => {
 const profileload = async (req, res) => {
   try {
     const id = req.params.id;
-    const userDatas = await User.findById({ _id: id })
+    const userDatas = await User.findById({ _id: id }).select(['-password','-fcm_token','-email','-token'])
     if (userDatas) {
       const post = await blog.find({ userid: userDatas._id })
       const text = await Tpost.find({ userid: userDatas._id })
@@ -418,7 +418,7 @@ const profileload = async (req, res) => {
       //   }
       // }
       // console.log(result)
-      const allfollowingconut = await User.findById({ _id: req.session.user._id })
+      const allfollowingconut = await User.findById({ _id: req.session.user._id }).select(['-password','-fcm_token','-email','-token'])
       // console.log(allfollowingconut.following.length)
 
       res.status(200).send({ user: userDatas, post: post, userfwc: allfollowingconut, tpost: text, totalposts: posts })
@@ -600,7 +600,7 @@ const deletechatload = async (req, res) => {
 }
 const searchusers = async (req, res) => {
   try {
-    const allusers = await User.find({})
+    const allusers = await User.find({}).select(['-password','-fcm_token','-email','-token'])
     res.status(200).send({ user: allusers })
 
   } catch (error) {

@@ -61,7 +61,7 @@ const commentblog = async (req, res) => {
       // const commented = await comment.find({})
 console.log("ok")
         const commented = await comment.find({})
-         const usersiddata = await User.findById({_id: userDatas.userid})
+         const usersiddata = await User.findById({_id: userDatas.userid}).select(['-password','-fcm_token','-email','-token'])
          const findblogcreator = await blog.findById({_id: userdatas.blogid})
          const usernamesend = await User.findById({_id: findblogcreator.userid})
          if(usernamesend){
@@ -112,7 +112,7 @@ const commenttextpost = async (req, res) => {
       // const commented = await comment.find({})
 console.log("ok")
         const commented = await comment.find({})
-         const usersiddata = await User.findById({_id: userDatas.userid})
+         const usersiddata = await User.findById({_id: userDatas.userid}).select(['-password','-fcm_token','-email','-token'])
          const findblogcreator = await blog.findById({_id: userdatas.blogid})
          const usernamesend = await User.findById({_id: findblogcreator.userid})
          if(usernamesend){
