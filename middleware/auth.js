@@ -1,11 +1,10 @@
 const isLogin = async (req, res, next) => {
     try {
         if (req.session.user) {
-
+            next()
         } else {
             res.redirect('/')
         }
-        next();
     } catch (error) {
         console.log(error.message)
     }
@@ -21,6 +20,6 @@ const isLogout = async (req, res, next) => {
     }
 }
 module.exports = {
-      isLogin,
-      isLogout
+    isLogin,
+    isLogout
 }

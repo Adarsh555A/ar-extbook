@@ -58,7 +58,7 @@ user_route.post('/location', userControl.location);
 //     res.redirect('/')
 // });
 user_route.get('/profileedit', userControl.loadedit)
-user_route.post('/profileedit', userControl.editprofile)
+user_route.post('/profileedit',auth.isLogin, userControl.editprofile)
 user_route.get('/verify/:id', userControl.verifymail)
 user_route.get('/reset-password', userControl.forgetload)
 user_route.post('/reset-password', userControl.forgetVerify)
@@ -72,11 +72,11 @@ user_route.post('/notification', userControl.notification);
 
 //blog
 user_route.get('/uploadblog', blogpost.uploadblogload)
-user_route.post('/uploadblog',  blogpost.uploadblog)
+user_route.post('/uploadblog',auth.isLogin,  blogpost.uploadblog)
 user_route.get('/blogusers', blogpost.blogsload)
 user_route.get('/myblogs',  blogpost.myblogsload)
 user_route.get('/editblog/:id',  blogpost.editblogload)
-user_route.post('/editblog/:id', blogpost.editblog)
+user_route.post('/editblog/:id',auth.isLogin, blogpost.editblog)
 user_route.get('/mydeleteblogs/:id', blogpost.mydeleteblogs)
 user_route.get('/like/:id', blogpost.likeblog)
 user_route.get('/unlike/:id', blogpost.unlikeblog)
@@ -92,7 +92,7 @@ user_route.get('/usersprofile/:id', userControl.profileload)
 //Text post
 user_route.get('/textsposts', blogpost.textpostload)
 user_route.get('/uploadtpost',  blogpost.uploadtextpostload)
-user_route.post('/uploadtpost',  blogpost.uploadtpost)
+user_route.post('/uploadtpost',auth.isLogin,  blogpost.uploadtpost)
 user_route.get('/mytextpost',  blogpost.mytextpostload)
 user_route.get('/mytextpostdelete/:id',  blogpost.mydeletetextpost)
 user_route.get('/likeTpost/:id', blogpost.liketextpost)
@@ -101,13 +101,13 @@ user_route.get('/textspostview/:id', blogpost.textpostview)
 
 
 //comment
-user_route.post('/comment/:id', comment.commentblog)
+user_route.post('/comment/:id',auth.isLogin, comment.commentblog)
 user_route.get('/comment/:id', comment.commentblogload)
-user_route.post('/commenttext/:id', comment.commenttextpost)
+user_route.post('/commenttext/:id',auth.isLogin, comment.commenttextpost)
 
 //follow
-user_route.post('/follow', userControl.followpush)
-user_route.post('/unfollow', userControl.followpull)
+user_route.post('/follow',auth.isLogin, userControl.followpush)
+user_route.post('/unfollow',auth.isLogin, userControl.followpull)
 user_route.get('/userfollowingposts', userControl.followingposts)
 
 // user_route.post('/searchuser', userControl.followpush)
